@@ -1,0 +1,30 @@
+{
+  "console.log": {
+    "prefix": "clog",
+    "body": [
+      "console.log($1)"
+    ],
+    "description": "Log output to console"
+  },
+  "p": {
+    "prefix": "px",
+    "body": [
+      "<p>\n  $1\n</p>"
+    ],
+    "description": "A fucking p"
+  },
+  "h1": {
+    "prefix": "h1",
+    "body": [
+      "<h1>\n  $1\n</h1>"
+    ],
+    "description": "A fucking h1"
+  },
+  "div": {
+    "prefix": "div",
+    "body": [
+      "<div>\n  $1\n</div>"
+    ],
+    "description": "A fucking div"
+  }
+}

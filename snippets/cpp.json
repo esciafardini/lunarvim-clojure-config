@@ -1,0 +1,9 @@
+{
+  "newproj": {
+    "prefix": "new",
+    "body": [
+      "#include <iostream>\nusing namespace std;\n\nint main()\n{\n\t$1\n\treturn 0;\n}"
+    ],
+    "description": "Make a new program for Think Like a Programmer"
+  }
+}
