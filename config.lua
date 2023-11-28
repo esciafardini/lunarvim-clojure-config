@@ -104,16 +104,6 @@ lvim.builtin.which_key.mappings["c"] = {
   z = { "<cmd>normal @h<cr>", "Horizontal Conjure Window" },
 }
 
-lvim.builtin.which_key.mappings["t"] = {
-  name = "+Trouble",
-  r = { "<cmd>Trouble lsp_references<cr>", "References" },
-  f = { "<cmd>Trouble lsp_definitions<cr>", "Definitions" },
-  d = { "<cmd>Trouble document_diagnostics<cr>", "Diagnostics" },
-  q = { "<cmd>Trouble quickfix<cr>", "QuickFix" },
-  l = { "<cmd>Trouble loclist<cr>", "LocationList" },
-  w = { "<cmd>Trouble workspace_diagnostics<cr>", "Workspace Diagnostics" },
-}
-
 -- TODO: User Config for predefined plugins
 -- After changing plugin config exit and reopen LunarVim, Run :PackerInstall :PackerCompile
 lvim.builtin.alpha.active = true
@@ -150,9 +140,5 @@ lvim.plugins = {
   { "tpope/vim-fugitive" },
   { "tpope/vim-sexp-mappings-for-regular-people" },
   { "tpope/vim-surround" },
-  { "tpope/vim-repeat" },
-  {
-    "folke/trouble.nvim",
-    cmd = "TroubleToggle"
-  }
+  { "tpope/vim-repeat" }
 }
