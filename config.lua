@@ -39,35 +39,6 @@ vim.fn.setreg('p', 'v%p')
 vim.fn.setreg('x', 'v%x')
 vim.fn.setreg('y', 'v%y')
 
---vim S-expression keymaps
-lvim.keys.normal_mode["<localleader>kr"] = "<Plug>(sexp_raise_element)"
-lvim.keys.normal_mode["<localleader>ms"] = "<Plug>(sexp_splice_list)"
-lvim.keys.normal_mode["<C-Left>"] = "<Plug>(sexp_emit_tail_element)"
-lvim.keys.normal_mode["<C-Right>"] = "<Plug>(sexp_capture_next_element)"
-lvim.keys.normal_mode["("] = "<Plug>(sexp_move_to_prev_bracket)"
-lvim.keys.normal_mode[")"] = "<Plug>(sexp_move_to_next_bracket)"
-lvim.keys.normal_mode["<localleader>i"] = "<Plug>(sexp_round_head_wrap_list)"
-lvim.keys.normal_mode["<localleader>["] = "<Plug>(sexp_square_head_wrap_list)"
-lvim.keys.normal_mode["<M-k>"] = "<Plug>(sexp_swap_list_backward)"
-lvim.keys.normal_mode["<M-j>"] = "<Plug>(sexp_swap_list_forward)"
-lvim.keys.normal_mode["<M-h>"] = "<Plug>(sexp_swap_element_backward)"
-lvim.keys.normal_mode["<M-l>"] = "<Plug>(sexp_swap_element_forward)"
-lvim.keys.normal_mode["<localleader>{"] = "<Plug>(sexp_curly_head_wrap_list)"
-lvim.keys.normal_mode["<localleader>}"] = "<Plug>(sexp_curly_tail_wrap_list)"
-lvim.keys.normal_mode["<localleader>w"] = "<Plug>(sexp_round_head_wrap_element)"
-lvim.keys.normal_mode["<localleader>e["] = "<Plug>(sexp_square_head_wrap_element)"
-lvim.keys.normal_mode["<localleader>e]"] = "<Plug>(sexp_square_tail_wrap_element)"
-lvim.keys.normal_mode["<localleader>e{"] = "<Plug>(sexp_curly_head_wrap_element)"
-lvim.keys.normal_mode["<localleader>e}"] = "<Plug>(sexp_curly_tail_wrap_element)"
-lvim.keys.normal_mode["<localleader>lb"] = "<plug>(sexp_capture_prev_element)"
-lvim.keys.insert_mode["\""] = "<Plug>(sexp_insert_double_quote)"
-lvim.keys.insert_mode["("] = "<Plug>(sexp_insert_opening_round)"
-lvim.keys.insert_mode[")"] = "<Plug>(sexp_insert_closing_round)"
-lvim.keys.insert_mode["["] = "<Plug>(sexp_insert_opening_square)"
-lvim.keys.insert_mode["]"] = "<Plug>(sexp_insert_closing_square)"
-lvim.keys.insert_mode["{"] = "<Plug>(sexp_insert_opening_curly)"
-lvim.keys.insert_mode["}"] = "<Plug>(sexp_insert_closing_curly)"
-
 -- Use which-key to add extra bindings with the leader-key prefix
 lvim.builtin.which_key.mappings["P"] = { "<cmd>Telescope projects<CR>", "Projects" }
 lvim.keys.visual_mode["K"] = ":move '<-2<CR>gv-gv"
@@ -132,11 +103,55 @@ lvim.builtin.treesitter.ensure_installed = {
 lvim.builtin.treesitter.ignore_install = { "haskell" }
 lvim.builtin.treesitter.highlight.enable = true
 
+require("treesitter-sexp").setup {
+  -- Enable/disable
+  enabled = true,
+  -- Move cursor when applying commands
+  set_cursor = true,
+  -- Set to false to disable all keymaps
+  keymaps = {
+    -- Set to false to disable keymap type
+    commands = {
+      -- Set to false to disable individual keymaps
+      swap_prev_elem = "<e",
+      swap_next_elem = ">e",
+      swap_prev_form = "<f",
+      swap_next_form = ">f",
+      promote_elem = "<LocalLeader>O",
+      promote_form = "<LocalLeader>o",
+      splice = "<LocalLeader>@",
+      slurp_left = "<(",
+      slurp_right = ">)",
+      barf_left = ">(",
+      barf_right = "<)",
+      insert_head = "<I",
+      insert_tail = ">I",
+    },
+    motions = {
+      form_start = "(",
+      form_end = ")",
+      prev_elem = "[e",
+      next_elem = "]e",
+      prev_elem_end = "[E",
+      next_elem_end = "]E",
+      prev_top_level = "[[",
+      next_top_level = "]]",
+    },
+    textobjects = {
+      inner_elem = "ie",
+      outer_elem = "ae",
+      inner_form = "if",
+      outer_form = "af",
+      inner_top_level = "iF",
+      outer_top_level = "aF",
+    },
+  },
+}
+
 -- Additional Plugins
 lvim.plugins = {
   { "Olical/conjure" },
-  { "sainnhe/gruvbox-material" },
-  { "guns/vim-sexp" },
+  { "PaterJason/nvim-treesitter-sexp" },
   { "tpope/vim-fugitive" },
   { "tpope/vim-sexp-mappings-for-regular-people" },
   { "tpope/vim-surround" },
