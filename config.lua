@@ -2,12 +2,60 @@
 lvim.leader = "space"
 vim.g.maplocalleader = ","
 
+require("mason-lspconfig").setup {
+    ensure_installed = { "solargraph", "lua_ls", "rust_analyzer" },
+}
+
+-- why did you delete this silly boy?
+-- This prevents package.json from registering Dashboard as a project
+lvim.builtin.project.patterns = { ".git" }
+
+lvim.builtin.telescope.defaults.path_display = nil
+
 -- colorscheme
 lvim.colorscheme = 'tokyonight-storm'
 
--- removing package.json (and more) as a project pattern below
--- to avoid dashboard being registered as a project
-lvim.builtin.project.patterns = { ".git" }
+lvim.builtin.telescope.defaults.file_ignore_patterns = {
+  "vendor/*",
+  "resources/cluvio/*",
+  "%.lock",
+  "__pycache__/*",
+  "%.sqlite3",
+  "%.ipynb",
+  "node_modules/*",
+  "%.jpg",
+  "%.jpeg",
+  "%.png",
+  "%.svg",
+  "%.otf",
+  "%.ttf",
+  ".git/",
+  "%.webp",
+  ".dart_tool/",
+  ".github/",
+  ".gradle/",
+  ".idea/",
+  ".vscode/",
+  "__pycache__/",
+  "build/",
+  "env/",
+  "gradle/",
+  "node_modules/",
+  "target/",
+  "%.pdb",
+  "%.dll",
+  "%.class",
+  "%.exe",
+  "%.cache",
+  "%.ico",
+  "%.pdf",
+  "%.dylib",
+  "%.jar",
+  "%.docx",
+  "%.met",
+  "smalljre_*/*",
+  ".vale/",
+}
 
 -- virtual text is annoying
 vim.diagnostic.config({ virtual_text = false })
@@ -25,12 +73,23 @@ vim.cmd([[
 autocmd FileType clojure let g:clojure_fuzzy_indent_patterns+=['^dofor$', '^GET$', '^POST$', '^PUT$', '^PATCH$', '^DELETE$', '^ANY$']
 ]])
 
+-- fck i need GOD and a ginger ALE
+-- trying rubuy shit
+vim.g.neoterm_size = 16
+vim.g.neoterm_autoscroll = '1'
+
+vim.cmd([[
+  command! -nargs=+ TT Topen | T
+]])
+
+
 -- no space for vim-wrap
 vim.g.sexp_insert_after_wrap = 0
 
 -- disable automatic bb REPL & read repl out as edn
 vim.g["conjure#client#clojure#nrepl#eval#raw_out"] = true
 vim.g["conjure#client#clojure#nrepl#connection#auto_repl#enabled"] = false
+vim.g["conjure#client#sql#stdio#command"] = "psql -U svc_user -p 5432 -h local.aclaimant.com -d aclaimant"
 
 -- macros
 vim.fn.setreg('d', ',walog/daff lywhi pl(')
@@ -38,6 +97,7 @@ vim.fn.setreg('s', ',walog/spy ')
 vim.fn.setreg('p', 'v%p')
 vim.fn.setreg('x', 'v%x')
 vim.fn.setreg('y', 'v%y')
+vim.fn.setreg('b', 'ggVG,w')
 
 -- Use which-key to add extra bindings with the leader-key prefix
 lvim.builtin.which_key.mappings["P"] = { "<cmd>Telescope projects<CR>", "Projects" }
@@ -87,6 +147,7 @@ lvim.builtin.nvimtree.setup.renderer.icons.show.git = false
 lvim.builtin.treesitter.ensure_installed = {
   "bash",
   "clojure",
+  "ruby",
   "c",
   "javascript",
   "json",
@@ -102,58 +163,53 @@ lvim.builtin.treesitter.ensure_installed = {
 
 lvim.builtin.treesitter.ignore_install = { "haskell" }
 lvim.builtin.treesitter.highlight.enable = true
-
-require("treesitter-sexp").setup {
-  -- Enable/disable
-  enabled = true,
-  -- Move cursor when applying commands
-  set_cursor = true,
-  -- Set to false to disable all keymaps
-  keymaps = {
-    -- Set to false to disable keymap type
-    commands = {
-      -- Set to false to disable individual keymaps
-      swap_prev_elem = "<e",
-      swap_next_elem = ">e",
-      swap_prev_form = "<f",
-      swap_next_form = ">f",
-      promote_elem = "<LocalLeader>O",
-      promote_form = "<LocalLeader>o",
-      splice = "<LocalLeader>@",
-      slurp_left = "<(",
-      slurp_right = ">)",
-      barf_left = ">(",
-      barf_right = "<)",
-      insert_head = "<I",
-      insert_tail = ">I",
-    },
-    motions = {
-      form_start = "(",
-      form_end = ")",
-      prev_elem = "[e",
-      next_elem = "]e",
-      prev_elem_end = "[E",
-      next_elem_end = "]E",
-      prev_top_level = "[[",
-      next_top_level = "]]",
-    },
-    textobjects = {
-      inner_elem = "ie",
-      outer_elem = "ae",
-      inner_form = "if",
-      outer_form = "af",
-      inner_top_level = "iF",
-      outer_top_level = "aF",
-    },
-  },
-}
+-- weird treesitter bug prevention:
+lvim.builtin.treesitter.indent = false
 
 -- Additional Plugins
 lvim.plugins = {
   { "Olical/conjure" },
-  { "PaterJason/nvim-treesitter-sexp" },
+  { "folke/tokyonight.nvim" },
+  { "guns/vim-sexp" },
+  { "kassio/neoterm" },
   { "tpope/vim-fugitive" },
   { "tpope/vim-sexp-mappings-for-regular-people" },
   { "tpope/vim-surround" },
   { "tpope/vim-repeat" }
+}
+
+vim.keymap.set('n', '<localleader>kr', '<localleader>O', { remap = true })
+
+--vimterm shit
+vim.keymap.set('n', '<localleader>0', ':Ttoggle<CR>', { noremap = true, silent = true })
+vim.keymap.set('v', '<localleader>w', ':TREPLSendSelection<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<localleader>w', ':TREPLSendLine<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<localleader>3', ':Tmap<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<localleader>b', '@b', { noremap = true, silent = true })
+
+-- Set neoterm_automap_keys to <F5>
+vim.g.neoterm_automap_keys = '<F5>'
+
+lvim.autocommands = {
+    {
+        "BufReadPost",
+        {
+            pattern = { "*.erb", "*.eruby" },
+            command = "set syntax=html",
+        }
+    },
+}
+
+lvim.autocommands = {
+  {
+    { "ColorScheme" },
+    {
+      pattern = "*",
+      callback = function()
+        vim.api.nvim_set_hl(0, 'LineNr', { fg = '#e6ddb3', bold = false })
+        vim.api.nvim_set_hl(0, 'CursorLineNr', { fg = '#FFFFFF', bold = true })
+        vim.api.nvim_set_hl(0, "Comment", { fg = "#919294", underline = false, bold = false, italic = true })
+      end,
+    },
+  },
 }
